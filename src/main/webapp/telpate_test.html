@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hello World</title>
+
+    <!-- Bootstrap -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="js/lib/jquery.i18n/jquery.i18n.js"></script>
+    <script src="js/lib/jquery.i18n/jquery.i18n.messagestore.js"></script>
+    <script src="js/lib/jquery.i18n/jquery.i18n.fallbacks.js"></script>
+    <script src="js/lib/jquery.i18n/jquery.i18n.language.js"></script>
+    <script src="js/lib/jquery.i18n/jquery.i18n.parser.js"></script>
+    <script src="js/lib/jquery.i18n/jquery.i18n.emitter.js"></script>
+    <script src="js/lib/jquery.i18n/jquery.i18n.emitter.bidi.js"></script>
+    <script src="antixss.js" type="text/javascript"></script>
+     <script>
+        $( document ).ready(function() {
+            $.i18n().load( {
+                en: {
+                    "welcome": "Welcome.",
+                    "answer": "answer",
+                    "what_is_your_name": "What is your name?",
+                    "hello": "You chose $1",
+                    "added_to_database": " $1, has been added to the database!",
+                    "database_contents": "Database contents: "
+                }
+            } );
+            $('body').i18n();
+            //$('#user_name').attr("placeholder", $.i18n('name') );
+        });
+        </script>
+
+
+
+</head>
+
+<body>
+  <div class="container" id="container">
+        
+  <template id='answer-template'>
+    <fieldset class="fquestion" name="">
+    <div class="row">
+              <div class="col-lg-12">
+                <div class='question'>
+                  
+                </div><!-- /input-group -->
+              </div><!-- /.col-lg-12 -->
+        </div>
+   <div class="row">
+     <div class="col-lg-12">
+       <div class="input-group">
+          <span class="input-group-addon">
+            <input type="radio" class='answer-input' aria-label="answer1" name="answer" value="I dont know"><label class='answer-option'>I dont know</label>
+          </span>
+                  
+        </div><!-- /input-group -->
+     </div><!-- /.col-lg-6 -->
+    </div>
+  </fieldset>
+  
+    
+</template>
+    
+    <footer class="footer">
+      <p id='submit'><input type="submit" name="submit" class="btn btn-primary btn-lg" id="qa" href="#" role="button" value="Submit All Answers"></p>
+
+        <div class="container">
+            <span><a href="introduction.html" target="_blank">Introduction</a></span>
+        </div>
+    </footer>
+       <script>
+if ('content' in document.createElement('template')) {
+  console.log("good");
+} else {
+  console.log("bad");
+}
+
+// An array of comments.
+var answers = [[
+  {'question': '1', 'body': 'cloud-controller'},
+  {'question': '2', 'body': 'api-server'},
+  {'question': '3', 'body': 'kubectl'},
+  {'question': '4', 'body': 'kubelet'}
+],
+[
+  {'question': '1', 'body': 'Amazon'},
+  {'question': '2', 'body': 'Microsoft'},
+  {'question': '3', 'body': 'IBM'},
+  {'question': '4', 'body': 'Google'}
+],
+[
+  {'question': '1', 'body': 'cloud-controller'},
+  {'question': '2', 'body': 'api-server'},
+  {'question': '3', 'body': 'kubectl'},
+  {'question': '4', 'body': 'kubelet'}
+],
+[
+  {'question': '1', 'body': 'Amazon'},
+  {'question': '2', 'body': 'Microsoft'},
+  {'question': '3', 'body': 'IBM'},
+  {'question': '4', 'body': 'Google'}
+]];
+var questions = [
+{'question': '1', 'body':'Which of the following is not a component of the master node?'},
+{'question':'2', 'body':'Who released the code to Kubernetes as an open-sourced project?'},
+{'question': '1', 'body':'Which of the following is not a component of the master node?'},
+{'question':'2', 'body':'Who released the code to Kubernetes as an open-sourced project?'}
+];
+// Get a reference to the comments list in the main DOM.
+var answersList = document.getElementById('container');
+
+// Loop through each of the comments and add them to the comments list.
+for(var j=0;j< questions.length; j++){
+  var question=questions[j];
+  var template = document.getElementById('answer-template').content.cloneNode(true);
+  template.querySelector('.fquestion').name = "group"+j;
+  template.querySelector('.question').innerText = question.body;
+  answersList.appendChild(template);
+  for (var i = 0; i < answers.length; i++) {
+    var answer = answers[j][i];
+    console.log(i);
+    console.log(answer);
+    var tmpl = document.getElementById('answer-template').content.cloneNode(true);
+    console.log(tmpl);
+    tmpl.querySelector('.answer-input').value= answer.question +":"+ answer.body;
+    tmpl.querySelector('.answer-input').name="group"+j;
+    tmpl.querySelector('.answer-option').innerText = answer.body;
+    answersList.appendChild(tmpl);
+  }
+
+}
+
+ $("input[name='submit']").click(function(){
+            var radioValue = $("input[type='radio']:checked").val();
+            console.log(radioValue);
+            if(radioValue){ //catch Enter key
+              //POST request to API to create a new visitor entry in the database
+                $.ajax({
+          method: "POST",
+          url: "./api/answers",
+          contentType: "application/json",
+          data: JSON.stringify({answer: radioValue })
+        })
+                .done(function(data) {
+                    if(data && data.radioValue){
+                        if(data._id)
+                            $('#response').html($.i18n('added_to_database', AntiXSS.sanitizeInput(data.radioValue)));
+                        else
+                            $('#response').html($.i18n('hello', AntiXSS.sanitizeInput(data.radioValue))); 
+                    }
+                    else {
+                        $('#response').html(AntiXSS.sanitizeInput(data));
+                    }
+                    
+                    getAnswers();
+                });
+            }
+        });
+
+    </script>
+
+</body>
+
+
+</html>
+
+
+

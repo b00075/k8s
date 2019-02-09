@@ -1,0 +1,7 @@
+---
+applications:
+ - name: k8s
+   random-route: true
+   path: target/k8s.war
+   memory: 256M
+   instances: 1
