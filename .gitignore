@@ -1,3 +1,4 @@
+/src/main/resources/*
 target/*
 |target/GetStartedJava.war
 .settings
@@ -6,3 +7,4 @@ target/*
 .factorypath
 .project
 /target/
+/bin/

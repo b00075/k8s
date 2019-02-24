@@ -15,7 +15,7 @@
  ******************************************************************************/
 package wasdev.sample.store;
 
-import java.util.Properties;
+
 
 public class VisitorStoreFactory {
 
